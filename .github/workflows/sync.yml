@@ -1,6 +1,6 @@
 name: Sync YouTube videos
 on:
-  schedule: [{ cron: '*/30 * * * *' }]
+  schedule: [{ cron: '11,41 * * * *' }]
   push: { branches: [main] }
   workflow_dispatch:
     inputs:
