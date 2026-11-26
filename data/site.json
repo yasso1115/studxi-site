@@ -1,12 +1,12 @@
 {
- "announcement": "",
- "meeting": "",
- "meeting_at": "2026-11-26T19:01",
- "meeting_link": "",
- "cancel_reason": "",
- "show": {
-  "videos": true,
-  "kits": true,
-  "community": true
- }
+  "announcement": "",
+  "meeting": "",
+  "meeting_at": "2026-11-26T19:01",
+  "meeting_link": "https://voovmeeting.com/dm/45iCC7ZRZ1pK",
+  "cancel_reason": "",
+  "show": {
+    "videos": true,
+    "kits": true,
+    "community": true
+  }
 }
