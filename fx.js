@@ -1,3 +1,23 @@
+// OneSignal web push (v16) - closed-site notifications
+var ONESIGNAL_APP_ID = 'dddc138e-c1fa-4445-b6c6-55a59aff040f';
+(function () {
+  var s = document.createElement('script');
+  s.src = 'https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js';
+  s.defer = true;
+  document.head.appendChild(s);
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  window.OneSignalDeferred.push(async function (OneSignal) {
+    try {
+      await OneSignal.init({
+        appId: ONESIGNAL_APP_ID,
+        serviceWorkerPath: '/studxi-site/OneSignalSDKWorker.js',
+        serviceWorkerParam: { scope: '/studxi-site/' },
+        notifyButton: { enable: false }
+      });
+    } catch (e) {}
+  });
+})();
+
 (() => {
 const rm = matchMedia('(prefers-reduced-motion:reduce)').matches;
 const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
@@ -225,6 +245,13 @@ document.addEventListener('click', (e) => {
     bell.type = 'button'; bell.textContent = '\u{1F514}'; bell.title = 'فعّل الإشعارات';
     bell.style.cssText = 'position:fixed;bottom:16px;left:16px;width:44px;height:44px;border-radius:50%;border:0;background:#c8f31d;font-size:20px;z-index:9999;cursor:pointer';
     bell.onclick = function () {
+      var done = function (p) { if (p !== 'default') bell.remove(); };
+      if (window.OneSignal && OneSignal.Slidedown && OneSignal.Slidedown.promptPush) {
+        OneSignal.Slidedown.promptPush().then(function () {
+          done(Notification.permission);
+        });
+        return;
+      }
       Notification.requestPermission().then(function (p) {
         if (p !== 'default') bell.remove();
         if (p === 'granted') toast('الإشعارات اتفعلت');
