@@ -139,10 +139,69 @@ document.addEventListener('click', (e) => {
       if (location.pathname.split('/').pop() === map[k]) { var m = document.querySelector('main'); if (m) m.innerHTML = '<section class="page-h"><h1 class="grad">القسم ده مخفي دلوقتي.</h1><p class="lead">هيرجع قريب.</p></section>'; }
     });
   };
+  // change alerts: in-page toast always; system notification only when the
+  // user granted permission and the tab is hidden (a static site cannot push
+  // when the page is closed - that needs a push service)
+  var toastT = null;
+  var toast = function (msg) {
+    var t = document.getElementById('studxi-toast');
+    if (!t) {
+      t = document.createElement('div'); t.id = 'studxi-toast';
+      t.style.cssText = 'position:fixed;bottom:88px;right:16px;left:16px;max-width:420px;margin:0 auto;background:#c8f31d;color:#0b0b0b;padding:12px 16px;border-radius:14px;font-weight:700;z-index:9999;box-shadow:0 8px 30px rgba(0,0,0,.4);text-align:center;transition:opacity .3s';
+      document.body.appendChild(t);
+    }
+    t.textContent = msg; t.style.opacity = '1'; t.style.display = 'block';
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { t.style.opacity = '0'; setTimeout(function () { t.style.display = 'none'; }, 350); }, 6000);
+  };
+  var sysNotify = function (title, body) {
+    if (!('Notification' in window) || Notification.permission !== 'granted' || !document.hidden) return;
+    try { new Notification(title, { body: body }); } catch (e) {}
+  };
+  var prevAnnc;
+  var watchSite = function (s) {
+    if (!s) return;
+    if (prevAnnc !== undefined && s.announcement && s.announcement !== prevAnnc) {
+      toast('إعلان جديد: ' + s.announcement);
+      sysNotify('STUDXI', s.announcement);
+    }
+    prevAnnc = s.announcement || '';
+  };
+  var seenVids = null;
+  var watchVids = function (d) {
+    if (!d || !d.videos) return;
+    var ids = d.videos.map(function (v) { return String(v.id || v.videoId || v.url || v.title || ''); });
+    if (seenVids === null) { seenVids = ids; return; } // first load: baseline, no noise
+    var fresh = d.videos.filter(function (v, i) { return seenVids.indexOf(ids[i]) === -1; });
+    if (fresh.length === 1) {
+      var t1 = fresh[0].title || 'فيديو جديد';
+      toast('نزل فيديو جديد: ' + t1);
+      sysNotify('فيديو جديد على STUDXI', t1);
+    } else if (fresh.length > 1) {
+      toast('نزل ' + fresh.length + ' فيديوهات جديدة');
+      sysNotify('STUDXI', 'نزل ' + fresh.length + ' فيديوهات جديدة');
+    }
+    seenVids = ids;
+  };
+  if ('Notification' in window && Notification.permission === 'default') {
+    var bell = document.createElement('button');
+    bell.type = 'button'; bell.textContent = '\u{1F514}'; bell.title = 'فعّل الإشعارات';
+    bell.style.cssText = 'position:fixed;bottom:16px;left:16px;width:44px;height:44px;border-radius:50%;border:0;background:#c8f31d;font-size:20px;z-index:9999;cursor:pointer';
+    bell.onclick = function () {
+      Notification.requestPermission().then(function (p) {
+        if (p !== 'default') bell.remove();
+        if (p === 'granted') toast('الإشعارات اتفعلت');
+      });
+    };
+    document.body.appendChild(bell);
+  }
   // poll every 15s so open pages pick up app changes without a refresh;
   // mobile browsers pause timers in background tabs, so also poll the moment
   // the tab becomes visible or regains focus
-  var pollSite = function () { get('data/site.json').then(applySite); };
+  var pollSite = function () {
+    get('data/site.json').then(function (s) { applySite(s); watchSite(s); });
+    get('data/videos.json').then(watchVids);
+  };
   pollSite(); setInterval(pollSite, 15000);
   document.addEventListener('visibilitychange', function () { if (!document.hidden) pollSite(); });
   addEventListener('focus', pollSite);
