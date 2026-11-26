@@ -61,7 +61,38 @@ if (orbs && !rm) addEventListener('scroll', () => { orbs.style.transform = 'tran
     const html = v.map((n, i) => '<div><b>' + String(n).padStart(2, '0') + '</b><small>' + l[i] + '</small></div>').join('');
     els.forEach((el) => { el.innerHTML = html; });
   };
-  draw(); setInterval(draw, 1000);
+  // join-meeting button: lives in the meeting section next to the countdown.
+  // Enabled only in the meeting window (15 min before to 2 h after start) when a
+  // link is set from the app; red "ملغي" while the meeting is cancelled.
+  var joinBtn = null;
+  var joinState = function () {
+    var els = document.querySelectorAll('[data-cd]'); if (!els.length) return;
+    if (!joinBtn) {
+      joinBtn = document.createElement('a');
+      joinBtn.style.cssText = 'display:inline-block;margin:14px auto 0;padding:12px 26px;border-radius:14px;font-weight:800;text-decoration:none';
+      els[0].parentNode.insertBefore(joinBtn, els[0].nextSibling);
+    }
+    var S = window.STUDXI_SITE || {};
+    if (String(S.cancel_reason || '')) {
+      joinBtn.textContent = 'ملغي';
+      joinBtn.removeAttribute('href');
+      joinBtn.style.cssText = 'display:inline-block;margin:14px auto 0;padding:12px 26px;border-radius:14px;font-weight:800;text-decoration:none;background:#d61f26;color:#fff;pointer-events:none';
+      return;
+    }
+    var link = /^https?:\/\//i.test(String(S.meeting_link || '')) ? String(S.meeting_link) : '';
+    var t = nextMeet(), now = Date.now();
+    var live = !!(t && link && now >= t.getTime() - 15 * 60000 && now <= t.getTime() + 2 * 3600000);
+    if (live) {
+      joinBtn.textContent = 'دخول الاجتماع';
+      joinBtn.href = link; joinBtn.target = '_blank'; joinBtn.rel = 'noopener';
+      joinBtn.style.cssText = 'display:inline-block;margin:14px auto 0;padding:12px 26px;border-radius:14px;font-weight:800;text-decoration:none;background:#c8f31d;color:#0b0b0b';
+    } else {
+      joinBtn.textContent = 'الدخول يتاح وقت الاجتماع';
+      joinBtn.removeAttribute('href');
+      joinBtn.style.cssText = 'display:inline-block;margin:14px auto 0;padding:12px 26px;border-radius:14px;font-weight:800;text-decoration:none;background:#1c1c1c;color:#777;pointer-events:none';
+    }
+  };
+  draw(); joinState(); setInterval(function () { draw(); joinState(); }, 1000);
 }
 // kit lab (delegated, so it also works inside OS Mode windows)
 const JERSEY = '<svg class="jersey" viewBox="0 0 200 200" style="--k1:#b6ff1a;--k2:#000" role="img" aria-label="طقم توضيحي"><path class="body" d="M70 20L25 42l-14 42 28 10 6-18v100h110V76l6 18 28-10-14-42-45-22c-6 14-20 22-30 22S76 34 70 20z"/><rect class="stripe" x="45" y="76" width="110" height="12"/><rect class="stripe" x="45" y="100" width="110" height="6"/><path class="trim" d="M70 20c6 14 20 22 30 22s24-8 30-22l-8-3c-4 10-14 16-22 16s-18-6-22-16z"/><path class="trim" d="M25 42l14 52 6-2-14-48zM175 42l-14 52-6-2 14-48z" opacity=".9"/></svg>';
