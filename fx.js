@@ -55,7 +55,8 @@ if (orbs && !rm) addEventListener('scroll', () => { orbs.style.transform = 'tran
   };
   const draw = () => {
     const els = document.querySelectorAll('[data-cd]'); if (!els.length) return;
-    const t = nextMeet(); if (!t) return; let s = Math.max(0, Math.floor((t - Date.now()) / 1000));
+    let s = 0;
+    if (!(window.STUDXI_SITE && String(window.STUDXI_SITE.cancel_reason || ''))) { const t = nextMeet(); if (!t) return; s = Math.max(0, Math.floor((t - Date.now()) / 1000)); }
     const v = [Math.floor(s / 86400), Math.floor(s % 86400 / 3600), Math.floor(s % 3600 / 60), s % 60], l = ['يوم', 'ساعة', 'دقيقة', 'ثانية'];
     const html = v.map((n, i) => '<div><b>' + String(n).padStart(2, '0') + '</b><small>' + l[i] + '</small></div>').join('');
     els.forEach((el) => { el.innerHTML = html; });
@@ -130,7 +131,7 @@ document.addEventListener('click', (e) => {
     } else if (annc) { annc.style.display = 'none'; }
     document.querySelectorAll('p.lead, h2, p.muted').forEach(function (p) {
       if (!meetDef.has(p)) { if (/كل جمعة/.test(p.textContent)) meetDef.set(p, p.textContent); else return; }
-      var t = s.meeting || meetDef.get(p); if (p.textContent !== t) p.textContent = t;
+      var t = s.cancel_reason ? ('الاجتماع اتلغى: ' + s.cancel_reason) : (s.meeting || meetDef.get(p)); if (p.textContent !== t) p.textContent = t;
     });
     var show = s.show || {}, map = { videos: 'videos.html', kits: 'kits.html', community: 'community.html' };
     Object.keys(map).forEach(function (k) {
@@ -158,14 +159,19 @@ document.addEventListener('click', (e) => {
     if (!('Notification' in window) || Notification.permission !== 'granted' || !document.hidden) return;
     try { new Notification(title, { body: body }); } catch (e) {}
   };
-  var prevAnnc;
+  var prevAnnc, prevCancel;
   var watchSite = function (s) {
     if (!s) return;
     if (prevAnnc !== undefined && s.announcement && s.announcement !== prevAnnc) {
       toast('إعلان جديد: ' + s.announcement);
       sysNotify('STUDXI', s.announcement);
     }
+    if (prevCancel !== undefined && s.cancel_reason && s.cancel_reason !== prevCancel) {
+      toast('الاجتماع اتلغى: ' + s.cancel_reason);
+      sysNotify('الاجتماع اتلغى', s.cancel_reason);
+    }
     prevAnnc = s.announcement || '';
+    prevCancel = s.cancel_reason || '';
   };
   var seenVids = null;
   var watchVids = function (d) {
