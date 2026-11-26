@@ -1,9 +1,10 @@
 {
-  "announcement": "اهلا",
-  "meeting": "",
-  "show": {
-    "videos": true,
-    "kits": true,
-    "community": true
-  }
+ "announcement": "messi",
+ "meeting": "",
+ "meeting_at": "",
+ "show": {
+  "videos": true,
+  "kits": true,
+  "community": true
+ }
 }
