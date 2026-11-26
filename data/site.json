@@ -1,7 +1,9 @@
 {
   "announcement": "",
   "meeting": "",
-  "meeting_at": "",
+  "meeting_at": "2026-11-26T18:45",
+  "meeting_link": "https://meet.google.com/abc-defg-hij",
+  "cancel_reason": "اختبار زر الإلغاء",
   "show": {
     "videos": true,
     "kits": true,
