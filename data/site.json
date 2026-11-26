@@ -1,0 +1,9 @@
+{
+ "announcement": "test",
+ "meeting": "",
+ "show": {
+  "videos": true,
+  "kits": true,
+  "community": true
+ }
+}
