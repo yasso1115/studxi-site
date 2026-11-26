@@ -62,7 +62,7 @@ if (orbs && !rm) addEventListener('scroll', () => { orbs.style.transform = 'tran
   const cairoWall = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(String(s || '')); if (!m) return null; const guess = Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], 0); return new Date(guess - (wall(new Date(guess)) - guess)); };
   const nextMeet = () => {
     const o = window.STUDXI_SITE ? cairoWall(window.STUDXI_SITE.meeting_at) : null;
-    if (o && o > new Date()) return o;
+    if (o && o.getTime() > Date.now() - 2 * 3600000) return o;
     const now = new Date();
     for (let i = 0; i < 9; i++) {
       const p = parts(new Date(now.getTime() + i * 864e5));
