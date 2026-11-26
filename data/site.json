@@ -7,6 +7,6 @@
  "show": {
   "videos": true,
   "kits": true,
-  "community": true
+  "community": false
  }
 }
