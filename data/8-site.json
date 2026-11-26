@@ -1,0 +1,10 @@
+{
+ "announcement": "اختبار التحديث المباشر",
+ "meeting": "موعد تجريبي للعداد",
+ "meeting_at": "2026-11-26T17:29",
+ "show": {
+  "videos": true,
+  "kits": true,
+  "community": true
+ }
+}
