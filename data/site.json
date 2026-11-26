@@ -1,10 +1,11 @@
 {
- "announcement": "",
- "meeting": "",
- "meeting_at": "",
- "show": {
-  "videos": true,
-  "kits": true,
-  "community": true
- }
+  "announcement": "",
+  "meeting": "",
+  "meeting_at": "",
+  "cancel_reason": "اختبار إلغاء الاجتماع",
+  "show": {
+    "videos": true,
+    "kits": true,
+    "community": true
+  }
 }
