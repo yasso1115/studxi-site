@@ -1,6 +1,9 @@
+@font-face{font-family:'Thmanyah Text';src:url('assets/fonts/thmanyah-serif-text.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'Thmanyah Display';src:url('assets/fonts/thmanyah-serif-display-bold.otf') format('opentype');font-weight:700 800;font-display:swap}
+@font-face{font-family:'Thmanyah Sans';src:url('assets/fonts/thmanyah-sans-digital.otf') format('opentype');font-weight:300 400;font-display:swap}
 :root{--bg:#000;--bg2:#0b0b0d;--card:#161618;--line:rgba(255,255,255,.12);--lime:#b6ff1a;--text:#f5f5f7;--mute:#86868b;--ease:cubic-bezier(.28,.11,.32,1)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Cairo,-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Arabic','Segoe UI',Tahoma,system-ui,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Thmanyah Text',Cairo,-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Arabic','Segoe UI',Tahoma,system-ui,sans-serif;font-feature-settings:'salt' 1;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:var(--lime);text-decoration:none}a:hover{text-decoration:underline}
 header.nav{position:sticky;top:0;z-index:50;height:48px;background:rgba(22,22,24,.72);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
 .bar{max-width:1024px;height:100%;margin:auto;padding:0 18px;display:flex;align-items:center;gap:6px}
@@ -13,8 +16,8 @@ main{overflow-x:hidden}
 .sec{padding:96px 22px;text-align:center;position:relative}.sec.alt{background:var(--bg2)}
 .wrap{max-width:1024px;margin:auto}
 .eyebrow{color:var(--lime);font-weight:600;font-size:clamp(17px,2vw,21px);margin:0 0 8px}
-h1,.h1{font-size:clamp(40px,8vw,88px);line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:0 0 16px}
-h2,.h2{font-size:clamp(30px,5.5vw,56px);line-height:1.08;font-weight:800;letter-spacing:-.015em;margin:0 0 14px}
+h1,.h1{font-family:'Thmanyah Display','Thmanyah Text',Cairo,sans-serif;font-size:clamp(40px,8vw,88px);line-height:1.05;font-weight:800;letter-spacing:-.02em;margin:0 0 16px}
+h2,.h2{font-family:'Thmanyah Display','Thmanyah Text',Cairo,sans-serif;font-size:clamp(30px,5.5vw,56px);line-height:1.08;font-weight:800;letter-spacing:-.015em;margin:0 0 14px}
 .lead{font-size:clamp(18px,2.4vw,26px);color:var(--mute);max-width:760px;margin:0 auto 26px;font-weight:500}
 .grad{background:linear-gradient(90deg,#b6ff1a,#f5f5f7 60%,#b6ff1a);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
 @keyframes shine{to{background-position:200% center}}
@@ -104,3 +107,5 @@ footer{background:var(--bg2);color:var(--mute);text-align:center;padding:30px 16
  .sec{padding:72px 18px}.hero{min-height:calc(100vh - 48px)}
 }
 html,body{max-width:100%;overflow-x:hidden}
+
+[data-cd] b,[data-cd] small{font-family:'Thmanyah Sans','Thmanyah Text',Cairo,sans-serif}
