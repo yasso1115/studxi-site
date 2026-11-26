@@ -139,8 +139,12 @@ document.addEventListener('click', (e) => {
       if (location.pathname.split('/').pop() === map[k]) { var m = document.querySelector('main'); if (m) m.innerHTML = '<section class="page-h"><h1 class="grad">القسم ده مخفي دلوقتي.</h1><p class="lead">هيرجع قريب.</p></section>'; }
     });
   };
-  // poll every 15s so open pages pick up app changes without a refresh
+  // poll every 15s so open pages pick up app changes without a refresh;
+  // mobile browsers pause timers in background tabs, so also poll the moment
+  // the tab becomes visible or regains focus
   var pollSite = function () { get('data/site.json').then(applySite); };
   pollSite(); setInterval(pollSite, 15000);
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) pollSite(); });
+  addEventListener('focus', pollSite);
+  addEventListener('pageshow', function (e) { if (e.persisted) pollSite(); });
 })();
-
