@@ -1,10 +1,12 @@
 {
-  "announcement": "",
-  "meeting": "",
-  "meeting_at": "",
-  "show": {
-    "videos": true,
-    "kits": true,
-    "community": true
-  }
+ "announcement": "",
+ "meeting": "",
+ "meeting_at": "",
+ "meeting_link": "",
+ "cancel_reason": "كرض",
+ "show": {
+  "videos": true,
+  "kits": true,
+  "community": true
+ }
 }
