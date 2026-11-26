@@ -22,4 +22,23 @@ videos.sort((a, b) => b.published.localeCompare(a.published));
 const out = { channelId: CHANNEL_ID, updated: new Date().toISOString(), videos };
 const prev = existsSync('data/videos.json') ? JSON.parse(readFileSync('data/videos.json', 'utf8')) : null;
 if (!prev || JSON.stringify(prev.videos) !== JSON.stringify(videos)) writeFileSync('data/videos.json', JSON.stringify(out, null, 2));
+// Push newly appeared videos to OneSignal web-push subscribers (free plan).
+const newVids = prev ? videos.filter((v) => !prev.videos.some((p) => p.id === v.id)) : [];
+if (newVids.length && process.env.ONESIGNAL_APP_ID && process.env.ONESIGNAL_REST_API_KEY) {
+  for (const v of newVids.slice(0, 3)) {
+    const r = await fetch('https://api.onesignal.com/notifications', {
+      method: 'POST',
+      headers: { Authorization: 'Key ' + process.env.ONESIGNAL_REST_API_KEY, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        app_id: process.env.ONESIGNAL_APP_ID,
+        target_channel: 'push',
+        included_segments: ['Subscribed Users'],
+        headings: { en: 'STUDXI' },
+        contents: { en: '\u0641\u064a\u062f\u064a\u0648 \u062c\u062f\u064a\u062f: ' + v.title },
+        url: 'https://yasso1115.github.io/studxi-site/'
+      })
+    });
+    console.log('onesignal:', v.id, r.status);
+  }
+}
 console.log(`videos: ${videos.length}`);
